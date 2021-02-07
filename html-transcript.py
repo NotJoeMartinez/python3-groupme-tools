@@ -15,6 +15,8 @@ import datetime
 import os.path
 import sys
 import shutil
+import re
+import fileinput
 
 _HTML_HEADER = """<!doctype html>\n'
 <html>\n<head>
@@ -129,6 +131,21 @@ def write_html(folder, messages, emoji=True):
         write_html_transcript(messages, f, imgcache)
         f.write(_HTML_FOOTER)
 
+def fix_json(trans_file):
+    # Read in the file
+    tf = str(trans_file)
+    with open(tf, 'r') as file:
+        filedata = file.read()
+    # Replace the target string
+    fixed_json = re.sub('\]\n.', '\n,\n', filedata, flags=re.MULTILINE)
+
+
+    
+    # Write the file out again
+    with open(tf, 'w') as file:
+        file.write(fixed_json)
+    pass
+
 
 def main():
     """
@@ -145,7 +162,13 @@ def main():
 
     if not os.path.exists(sys.argv[2]):
         os.mkdir(sys.argv[2])
+
+    foo = sys.argv[1]
+    # calls fix_json
+    fix_json(foo)
     trans_file = open(sys.argv[1])
+
+
     transcript = json.load(trans_file)
     trans_file.close()
 
