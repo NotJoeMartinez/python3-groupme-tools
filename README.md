@@ -1,10 +1,5 @@
 # groupme-tools
 
-<!-- [![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/) -->
-My attempt to revive this project as groupMe has regained some relevance in the recent year. 
-Most of the changes are from refacoring into python3.
-
-*** 
 Tools to fetch the complete history of a GroupMe group chat and analyze it.
 
 `groupme-fetch.py` allows you to grab the entire transcript for one of your groups and save it as JSON for backup and analysis. It is documented; run it with `--help` for help. It also allows you to fetch recent updates in the group to keep your JSON file up to date.
