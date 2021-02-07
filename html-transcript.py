@@ -1,4 +1,3 @@
-#!/usr/bin/env python2
 """
 Module to translate JSON transcript into a pretty HTML output.
 
@@ -7,7 +6,8 @@ as all the necessary images for the transcript to be rendered in browser
 completely offline.
 """
 
-from UserDict import UserDict
+# from UserDict import UserDict
+from collections import UserDict 
 from inspect import cleandoc
 import json
 import requests
@@ -51,7 +51,7 @@ class ImageCache(UserDict):
         local = os.path.join(self._folder, local_file)
         if os.path.exists(local):
             return local_file
-        print 'Downloading image.'
+        print('Downloading image.')
         resp = requests.get(url, stream=True)
         with open(local, 'wb') as f:
             for chunk in resp.iter_content(chunk_size=1024):
@@ -93,12 +93,12 @@ def write_html_transcript(messages, outfile, imgcache):
 
         # Author
         outfile.write('<div class="author">')
-        outfile.write(name.encode('utf-8'))
+        # outfile.write(name.encode('utf-8'))
         outfile.write('</div>')
 
         # Message span
         outfile.write('<div class="message"><span class="message-span" title="%s">' % time_str)
-        outfile.write(text.encode('utf-8'))
+        # outfile.write(text.encode('utf-8'))
         outfile.write('</span></div>')
 
         # Likes
@@ -116,7 +116,7 @@ def write_html_transcript(messages, outfile, imgcache):
         # Close div
         outfile.write('</div>\n')
 
-        print '%04d/%04d messages processed' % (i, len(messages))
+        print('%04d/%04d messages processed' % (i, len(messages)))
 
 
 def write_html(folder, messages, emoji=True):
@@ -140,7 +140,7 @@ def main():
     emoji will end up unrecognizable.
     """
     if len(sys.argv) < 3:
-        print cleandoc(main.__doc__)
+        print(cleandoc(main.__doc__))
         sys.exit(1)
 
     if not os.path.exists(sys.argv[2]):

@@ -2,9 +2,10 @@ from datetime import datetime
 import os
 import sys
 import argparse
+import importlib
 
-reload(sys)
-sys.setdefaultencoding("utf-8")
+importlib.reload(sys)
+# sys.setdefaultencoding("utf-8")
 
 import requests
 import json
@@ -68,11 +69,11 @@ def main():
 
     # sort transcript in chronological order
     transcript = sorted(transcript, key=lambda k: k[u'created_at'])
-    print 'Transcript contains {0} messages from {1} to {2}'.format(
+    print('Transcript contains {0} messages from {1} to {2}'.format(
         len(transcript),
         datetime.fromtimestamp(transcript[0]['created_at']),
         datetime.fromtimestamp(transcript[-1]['created_at']),
-    )
+    ))
     transcriptFile = open(transcriptFileName, 'w+')
     json.dump(transcript, transcriptFile, ensure_ascii=False)
     transcriptFile.close()
@@ -100,7 +101,7 @@ def loadTranscript(transcriptFileName):
             try:
                 return json.loads(transcriptFile.read())
             except ValueError:
-                print 'transcript file had bad json! ignoring'
+                print('transcript file had bad json! ignoring')
                 return []
     return []
 
@@ -115,7 +116,7 @@ def loadTempTranscript(tempFileName):
             try:
                 return [m for line in tempFile.readlines() for m in json.loads(line)]
             except ValueError:
-                print 'temp file had bad json! ignoring'
+                print('temp file had bad json! ignoring')
                 return []
     return []
 
@@ -136,7 +137,7 @@ def populateTranscript(group, accessToken, transcript, beforeId, stopId, pageLim
     }
 
     tempFileName = getTempFileName(group)
-    with open(tempFileName, 'wb') as tempFile:
+    with open(tempFileName, 'w') as tempFile:
         while not complete:
             pageCount = pageCount + 1
             if pageLimit and pageCount > pageLimit:
@@ -150,7 +151,7 @@ def populateTranscript(group, accessToken, transcript, beforeId, stopId, pageLim
                 params = {}
             r = requests.get(endpoint, params=params, headers=headers)
 
-            if r.status_code is not 200:
+            if r.status_code != 200:
                 onRequestError(r)
 
             response = r.json()
@@ -170,7 +171,7 @@ def populateTranscript(group, accessToken, transcript, beforeId, stopId, pageLim
 
             tempFile.write(json.dumps(messages))
             tempFile.write('\n')
-            if len(messages) is not 20:
+            if len(messages) != 20:
                 complete = True
                 print('Reached the end/beginning!')
 
