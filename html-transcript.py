@@ -95,12 +95,12 @@ def write_html_transcript(messages, outfile, imgcache):
 
         # Author
         outfile.write('<div class="author">')
-        # outfile.write(name.encode('utf-8'))
+        outfile.write(name)
         outfile.write('</div>')
 
         # Message span
         outfile.write('<div class="message"><span class="message-span" title="%s">' % time_str)
-        # outfile.write(text.encode('utf-8'))
+        outfile.write(text)
         outfile.write('</span></div>')
 
         # Likes
@@ -113,7 +113,7 @@ def write_html_transcript(messages, outfile, imgcache):
         # Image
         if pic:
             local = imgcache[pic]
-            outfile.write('<img src="' + local + '" class="picture-message">')
+            outfile.write('<img src="' + local + '" class="picture-message" width="500" height="600" >')
 
         # Close div
         outfile.write('</div>\n')
@@ -137,6 +137,8 @@ def fix_json(trans_file):
     with open(tf, 'r') as file:
         filedata = file.read()
     # Replace the target string
+    # filedata = filedata.replace(pattern, ',')
+    print(filedata)
     fixed_json = re.sub('\]\n.', '\n,\n', filedata, flags=re.MULTILINE)
 
 
@@ -164,10 +166,11 @@ def main():
         os.mkdir(sys.argv[2])
 
     foo = sys.argv[1]
-    # calls fix_json
     fix_json(foo)
+
     trans_file = open(sys.argv[1])
 
+    # calls fix_json
 
     transcript = json.load(trans_file)
     trans_file.close()
