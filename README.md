@@ -2,6 +2,21 @@
 
 Tools to fetch the complete history of a GroupMe group chat and analyze it.
 
+## Example Usage
+
+**Downloads a json file with full transcript of group ** 
+
+```bash
+python groupme-fetch.py [Group ID] [Your Access Token]
+```
+
+**Downloads images and makes html page of transcript ** 
+You will need groupme-fetch.py to make a json file before doing this 
+
+```bash
+python html-transcript.py [filename.json] [html-output-directory]
+```
+
 ## `groupme-fetch.py` 
 Allows you to grab the entire transcript for one of your groups and save it as JSON for backup and analysis. It is documented; run it with `--help` for help. It also allows you to fetch recent updates in the group to keep your JSON file up to date.
 
@@ -32,10 +47,6 @@ Again, in GroupMe's web interface, the group ID is the numeric ID included in th
 ~~This was written and tested on Python 2.7, because I didn't want to waste time getting my [Homebrew](https://github.com/mxcl/homebrew/wiki/Homebrew-and-Python) installation to install things for Python 3. I suspect this script will break if you run it with Python 3, because Unicode.~~
 
 The only dependency is [Requests](http://docs.python-requests.org/en/latest/). `pip install requests`. 
-
-## Emoji
-
-`groupme-fetch.py` will store emoji and other non-ASCII characters in the transcript JSON fine, as expected.
 
 
 ## Keep your transcript up to date
