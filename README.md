@@ -4,13 +4,13 @@ Tools to fetch the complete history of a GroupMe group chat and analyze it.
 
 ## Example Usage
 
-**Downloads a json file with full transcript of group ** 
+**Downloads a json file with full transcript of group** 
 
 ```bash
 python groupme-fetch.py [Group ID] [Your Access Token]
 ```
 
-**Downloads images and makes html page of transcript ** 
+**Downloads images and makes html page of transcript** 
 You will need groupme-fetch.py to make a json file before doing this 
 
 ```bash
