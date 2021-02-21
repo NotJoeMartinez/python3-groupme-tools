@@ -1,4 +1,4 @@
-# groupme-tools
+# Python3 Groupme-Tools
 
 Tools to fetch the complete history of a GroupMe group chat and analyze it.
 
