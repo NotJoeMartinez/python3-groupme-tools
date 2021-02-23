@@ -43,11 +43,9 @@ One of the headers sent with that request, `X-Access-Token`, is your access toke
 Again, in GroupMe's web interface, the group ID is the numeric ID included in the group's URL (`https://web.groupme.com/groups/GROUP_ID`).
 
 ## Requirements/Dependencies/Python
-
-~~This was written and tested on Python 2.7, because I didn't want to waste time getting my [Homebrew](https://github.com/mxcl/homebrew/wiki/Homebrew-and-Python) installation to install things for Python 3. I suspect this script will break if you run it with Python 3, because Unicode.~~
-
-The only dependency is [Requests](http://docs.python-requests.org/en/latest/). `pip install requests`. 
-
+- Wget
+- Requests
+`pip install -r requirments.txt`
 
 ## Keep your transcript up to date
 After your initial fetch with `groupme-fetch.py`, optionally using the `oldest` option to fetch older history. You should have a complete transcript up to the last time you fetched. Then...
