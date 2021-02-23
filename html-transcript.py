@@ -49,7 +49,7 @@ class ImageCache(UserDict):
     def _save_image(self, url):
         # Full disclosure, largely adapted from this SO answer:
         # http://stackoverflow.com/a/16696317
-        local_file = url.split('/')[-1]
+        local_file = url.split('/')[-1] + ".jpeg"
         local = os.path.join(self._folder, local_file)
         if os.path.exists(local):
             return local_file
@@ -98,8 +98,10 @@ def write_html_transcript(messages, outfile, imgcache):
         outfile.write(name)
         outfile.write('</div>')
 
+        # time stamp
+        outfile.write("<div class='timestamp'> {}</div> <br>".format(time_str) )
         # Message span
-        outfile.write('<div class="message"><span class="message-span" title="%s">' % time_str)
+        outfile.write('<div class="message"><span class="message-span" title="{}">'.format(time_str) )
         outfile.write(text)
         outfile.write('</span></div>')
 
@@ -118,7 +120,7 @@ def write_html_transcript(messages, outfile, imgcache):
         # Close div
         outfile.write('</div>\n')
 
-        print('%04d/%04d messages processed' % (i, len(messages)))
+        # print('%04d/%04d messages processed' % (i, len(messages)))
 
 
 def write_html(folder, messages, emoji=True):
@@ -138,7 +140,6 @@ def fix_json(trans_file):
         filedata = file.read()
     # Replace the target string
     # filedata = filedata.replace(pattern, ',')
-    print(filedata)
     fixed_json = re.sub('\]\n.', '\n,\n', filedata, flags=re.MULTILINE)
 
 
@@ -151,13 +152,14 @@ def fix_json(trans_file):
 
 def main():
     """
-    Usage: html-transcript.py filename.json html-output-folder
+    Usage: html-transcript.py [filename.json] [html-output-folder]
 
     Takes a JSON GroupMe transcript and writes a mostly offline HTML version of
-    your transcript.  Downloads all images sent over GroupMe, and uses a
-    Javascript library + CDN to render all of the Emoji.  GroupMe-specific
-    emoji will end up unrecognizable.
+    your transcript. 
     """
+##TODO: determine if something is missing and let the user know what's up   
+
+    # if less than 2 args
     if len(sys.argv) < 3:
         print(cleandoc(main.__doc__))
         sys.exit(1)
@@ -165,8 +167,8 @@ def main():
     if not os.path.exists(sys.argv[2]):
         os.mkdir(sys.argv[2])
 
-    foo = sys.argv[1]
-    fix_json(foo)
+    json_file = sys.argv[1]
+    fix_json(json_file)
 
     trans_file = open(sys.argv[1])
 
