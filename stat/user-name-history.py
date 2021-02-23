@@ -1,18 +1,20 @@
 import sys
+from importlib import reload
 reload(sys)
-sys.setdefaultencoding("utf-8")
 
 import json
 import datetime
 
 
 def main():
-    """Usage: user-name-history.py filename.json
+    """
+    
+    Usage: python user-name-history.py [filename.json]
 
-Print a list of user IDs and their name history within
-the group.
+    Print a list of user IDs and their name history within
+    the group.
 
-Assumes filename.json is a JSON GroupMe transcript.
+    Assumes filename.json is a JSON GroupMe transcript.
     """
 
     if len(sys.argv) < 2:

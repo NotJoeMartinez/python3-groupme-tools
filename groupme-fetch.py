@@ -5,7 +5,6 @@ import argparse
 import importlib
 
 importlib.reload(sys)
-# sys.setdefaultencoding("utf-8")
 
 import requests
 import json

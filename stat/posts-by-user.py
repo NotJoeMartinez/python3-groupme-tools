@@ -1,16 +1,18 @@
 from collections import defaultdict
 import sys
+from importlib import reload
 reload(sys)
-sys.setdefaultencoding("utf-8")
 
 import json
 import datetime
 
 
 def main():
-    """Usage: posts-by-user.py filename.json
+    """
+    Usage: python posts-by-user.py [filename.json]
 
-Assumes filename.json is a JSON GroupMe transcript.
+    Assumes filename.json is a JSON GroupMe transcript.
+
     """
 
     if len(sys.argv) < 2:
@@ -23,6 +25,7 @@ Assumes filename.json is a JSON GroupMe transcript.
 
     names = {}
     counts = defaultdict(lambda: {'messages': 0, 'likes_given': 0, 'likes_received': 0})
+    print(counts)
     totalLikes = 0
 
     for message in transcript:
@@ -59,10 +62,10 @@ Assumes filename.json is a JSON GroupMe transcript.
             name=name, like_count=like_given_count, like_pct=like_given_count/float(totalLikes) * 100
         ))
     for category, values in output.items():
-        print '\n'
-        print category
-        print '--------'
-        print '\n'.join(values)
+        print('\n')
+        print(category)
+        print('--------')
+        print('\n'.join(values))
 
 if __name__ == '__main__':
     main()

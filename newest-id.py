@@ -1,15 +1,16 @@
 import sys
+from importlib import reload
 reload(sys)
-sys.setdefaultencoding("utf-8")
 
 import json
 import datetime
 
 
 def main():
-    """Usage: newest-id.py filename.json
+    """
+    Usage: python newest-id.py [filename.json]
 
-Assumes filename.json is a JSON GroupMe transcript in chronological order.
+    Assumes filename.json is a JSON GroupMe transcript in chronological order.
     """
 
     if len(sys.argv) < 2:

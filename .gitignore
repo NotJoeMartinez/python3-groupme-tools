@@ -12,6 +12,7 @@ transcript-*.json
 transcript-*.txt
 transcript-*.bak
 transcript-*.html
+*.json
 
 # text file of my groups and access token, for reference
 mygroups
