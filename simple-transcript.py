@@ -1,6 +1,9 @@
 import sys
+import importlib
+
+from importlib import reload
 reload(sys)
-sys.setdefaultencoding("utf-8")
+
 
 import json
 import datetime
@@ -10,7 +13,7 @@ def printTranscript(messages, outputFilename):
     """Prints a readable "transcript" from the given list of messages.
 
     Assumes the input list is sorted."""
-    with open(outputFilename, 'wb') as outFile:
+    with open(outputFilename, 'w') as outFile:
         for message in messages:
             name = message[u'name']
             time = datetime.datetime.fromtimestamp(message[u'created_at']).strftime('%Y-%m-%d %H:%M')
