@@ -2,6 +2,9 @@
 
 Tools to fetch the complete history of a GroupMe group chat and analyze it.
 
+
+<a href="https://youtu.be/8Rd8VgYF5dY?t=139" target="_blank"><img src="http://img.youtube.com/vi/8Rd8VgYF5dY/0.jpg" 
+alt="img" width="240" height="180" border="10" /></a>
 ## Example Usage
 
 **Downloads a json file with full transcript of group** 
