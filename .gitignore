@@ -5,6 +5,10 @@
 
 output/*
 output/
+*.sh
+test_stuff.sh
+__pycache__/*
+__pycache__
 
 # request logs used for RE and debugging
 /request_logs/*

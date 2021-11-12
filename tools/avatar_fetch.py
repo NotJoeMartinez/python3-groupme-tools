@@ -3,19 +3,20 @@ import os
 import requests # to get image from the web
 import shutil # to save it locally
 
-file_object = open("jsonfile.json")
-data = json.load(file_object)
-
 
 # Iterating through the json list
-avatar_urls = []
-for i in data:
-    if i['avatar_url'] not in avatar_urls:
-        if i['avatar_url'] is not None:
-            avatar_urls.append(i['avatar_url'])
 
-def save_avatars(avatar_dir):
+
+def save_avatars(avatar_dir,json_file):
     os.mkdir(avatar_dir)
+
+    file_object = open(json_file)
+    data = json.load(file_object)
+    avatar_urls = []
+    for i in data:
+        if i['avatar_url'] not in avatar_urls:
+            if i['avatar_url'] is not None:
+                avatar_urls.append(i['avatar_url'])
 
     for url in avatar_urls: 
         ## Set up the image URL and filename
@@ -36,4 +37,4 @@ def save_avatars(avatar_dir):
             print('Image sucessfully Downloaded: ',filename)
         else:
             print('Image Couldn\'t be retreived')
-            
+

@@ -1,9 +1,7 @@
 import sys
 import importlib
-
 from importlib import reload
 reload(sys)
-
 
 import json
 import datetime
@@ -18,9 +16,9 @@ def main(args):
     with open(input_file) as transcriptFile:
         transcript = json.load(transcriptFile)
 
-    printTranscript(transcript, output_file)
+    write_transcript(transcript, output_file)
 
-def printTranscript(messages, outputFilename):
+def write_transcript(messages, outputFilename):
     """Prints a readable "transcript" from the given list of messages.
 
     Assumes the input list is sorted."""

@@ -2,9 +2,11 @@ import os, sys, re, json
 from datetime import datetime
 import importlib
 
-importlib.reload(sys)
+from tools import avatar_fetch as af
 
+importlib.reload(sys)
 import requests
+
 
 
 def onRequestError(request):
@@ -22,9 +24,11 @@ def main(args):
     pages = args.pages
 
     transcriptFileName = 'transcript-{0}.json'.format(group)
+    output_dict = make_output_dir(transcriptFileName)
+
     transcript = loadTranscript(transcriptFileName)
     if args.resumePrevious or args.resumeNext:
-        tempFileName = getTempFileName(group)
+        tempFileName = getTempFileName(output_dict, group)
         tempTranscript = loadTempTranscript(tempFileName)
         transcript = sorted(reconcileTranscripts(transcript, tempTranscript),
                             key=lambda k: k['created_at'])
@@ -34,7 +38,7 @@ def main(args):
             else:
                 stopId = transcript[-1]['id']
 
-    transcript = populateTranscript(group, accessToken, transcript, beforeId, stopId, pages)
+    transcript = populateTranscript(output_dict, group, accessToken, transcript, beforeId, stopId, pages)
 
     # sort transcript in chronological order
     transcript = sorted(transcript, key=lambda k: k[u'created_at'])
@@ -43,11 +47,33 @@ def main(args):
         datetime.fromtimestamp(transcript[0]['created_at']),
         datetime.fromtimestamp(transcript[-1]['created_at']),
     ))
-    transcriptFile = open(transcriptFileName, 'w+')
+
+    transcriptFile = open(f"{output_dict['parent_dir']}{transcriptFileName}", 'w+')
+
     json.dump(transcript, transcriptFile, ensure_ascii=False)
     transcriptFile.close()
+    # output_dict = af.save_avatars()
 
 
+def make_output_dir(transcriptFileName):
+    from pathlib import Path
+    parent_dir = f"output/{transcriptFileName[:-5]}/"
+    media_dir = f"{parent_dir}/media/"
+    chat_imgs = f"{media_dir}/chat_imgs/"
+    chat_vids = f"{media_dir}/chat_vids/"
+    user_avatars = f"{media_dir}/user_avatars/"
+
+    Path(media_dir).mkdir(parents=True, exist_ok=True)
+    Path(chat_imgs).mkdir(parents=True, exist_ok=True)
+    Path(chat_vids).mkdir(parents=True, exist_ok=True)
+    Path(user_avatars).mkdir(parents=True, exist_ok=True)
+    return {
+        "parent_dir": parent_dir,
+        "meida_dir": media_dir,
+        "chat_imgs": chat_imgs,
+        "chat_vids": chat_vids,
+        "user_avatars": user_avatars 
+    }
 
 def reconcileTranscripts(*transcripts):
     """
@@ -91,7 +117,7 @@ def loadTempTranscript(tempFileName):
     return []
 
 
-def populateTranscript(group, accessToken, transcript, beforeId, stopId, pageLimit=None):
+def populateTranscript(output_dict, group, accessToken, transcript, beforeId, stopId, pageLimit=None):
     complete = False
     pageCount = 0
     endpoint = 'https://v2.groupme.com/groups/' + group + '/messages'
@@ -106,7 +132,7 @@ def populateTranscript(group, accessToken, transcript, beforeId, stopId, pageLim
         'X-Access-Token': accessToken
     }
 
-    tempFileName = getTempFileName(group)
+    tempFileName = getTempFileName(output_dict, group)
     with open(tempFileName, 'w') as tempFile:
         while not complete:
             pageCount = pageCount + 1
@@ -151,22 +177,22 @@ def populateTranscript(group, accessToken, transcript, beforeId, stopId, pageLim
     return transcript
 
 
-def getTempFileName(group):
-    return 'temp-transcript-{0}.json'.format(group)
+def getTempFileName(output_dict, group):
+    return f"{output_dict['parent_dir']}temp-transcript-{0}.json".format(group)
 
-def fix_json(trans_file):
-    # Read in the file
-    tf = str(trans_file)
-    with open(tf, 'r') as file:
-        filedata = file.read()
-    # Replace the target string
-    # filedata = filedata.replace(pattern, ',')
-    fixed_json = re.sub('\]\n.', '\n,\n', filedata, flags=re.MULTILINE)
+# def fix_json(trans_file):
+#     # Read in the file
+#     tf = str(trans_file)
+#     with open(tf, 'r') as file:
+#         filedata = file.read()
+#     # Replace the target string
+#     # filedata = filedata.replace(pattern, ',')
+#     fixed_json = re.sub('\]\n.', '\n,\n', filedata, flags=re.MULTILINE)
 
-    # Write the file out again
-    with open(tf, 'w') as file:
-        file.write(fixed_json)
-    pass
+#     # Write the file out again
+#     with open(tf, 'w') as file:
+#         file.write(fixed_json)
+#     pass
 
 if __name__ == '__main__':
     """
