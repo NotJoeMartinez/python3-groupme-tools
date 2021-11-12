@@ -1,13 +1,10 @@
+import os, sys, re, json
 from datetime import datetime
-import os
-import sys
-import argparse
 import importlib
 
 importlib.reload(sys)
 
 import requests
-import json
 
 
 def onRequestError(request):
@@ -17,34 +14,7 @@ def onRequestError(request):
     sys.exit(2)
 
 
-def main():
-    """
-    Writes out "transcript-groupId.json" with the history of the group
-    in chronological order.
-
-    If a file by that name is found, we'll go ahead and update that
-    scrape depending on the options you provide. It is assumed that the
-    file is in the correct format *and its messages are in chronological
-    order*.
-
-    The easiest way to continue a scrape is to pass --resumePrevious or --resumeNext
-    which will continue with the scrape moving backwards/forwards.
-
-    For more fine grained control you can provide --oldest or --newest flags with
-    specific message IDs
-    """
-    parser = argparse.ArgumentParser()
-    parser.add_argument('group')
-    parser.add_argument('accessToken')
-    parser.add_argument("--resumePrevious", action='store_true', default=False, help="Resume based on the last found files and get previous messages.")
-    parser.add_argument("--resumeNext", action='store_true', default=False, help="Resume based on the last found files and get next messages.")
-    parser.add_argument("--oldest", help="The ID of the oldest (topmost) message in the existing transcript file")
-    parser.add_argument("--newest", help="The ID of the newest (bottom-most) message in the existing transcript file")
-    parser.add_argument("--pages", type=int,
-                        help="The number of pages to pull down (defaults to as many as the conversation has")
-
-    args = parser.parse_args()
-
+def main(args):
     group = args.group
     accessToken = args.accessToken
     beforeId = args.oldest
@@ -76,6 +46,7 @@ def main():
     transcriptFile = open(transcriptFileName, 'w+')
     json.dump(transcript, transcriptFile, ensure_ascii=False)
     transcriptFile.close()
+
 
 
 def reconcileTranscripts(*transcripts):
@@ -183,7 +154,48 @@ def populateTranscript(group, accessToken, transcript, beforeId, stopId, pageLim
 def getTempFileName(group):
     return 'temp-transcript-{0}.json'.format(group)
 
+def fix_json(trans_file):
+    # Read in the file
+    tf = str(trans_file)
+    with open(tf, 'r') as file:
+        filedata = file.read()
+    # Replace the target string
+    # filedata = filedata.replace(pattern, ',')
+    fixed_json = re.sub('\]\n.', '\n,\n', filedata, flags=re.MULTILINE)
+
+    # Write the file out again
+    with open(tf, 'w') as file:
+        file.write(fixed_json)
+    pass
 
 if __name__ == '__main__':
-    main()
+    """
+    Writes out "transcript-groupId.json" with the history of the group
+    in chronological order.
+
+    If a file by that name is found, we'll go ahead and update that
+    scrape depending on the options you provide. It is assumed that the
+    file is in the correct format *and its messages are in chronological
+    order*.
+
+    The easiest way to continue a scrape is to pass --resumePrevious or --resumeNext
+    which will continue with the scrape moving backwards/forwards.
+
+    For more fine grained control you can provide --oldest or --newest flags with
+    specific message IDs
+    """
+
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument('group')
+    parser.add_argument('accessToken')
+    parser.add_argument("--resumePrevious", action='store_true', default=False, help="Resume based on the last found files and get previous messages.")
+    parser.add_argument("--resumeNext", action='store_true', default=False, help="Resume based on the last found files and get next messages.")
+    parser.add_argument("--oldest", help="The ID of the oldest (topmost) message in the existing transcript file")
+    parser.add_argument("--newest", help="The ID of the newest (bottom-most) message in the existing transcript file")
+    parser.add_argument("--pages", type=int,
+                        help="The number of pages to pull down (defaults to as many as the conversation has")
+
+    args = parser.parse_args()
+    main(args)
     sys.exit(0)

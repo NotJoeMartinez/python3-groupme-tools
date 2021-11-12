@@ -3,6 +3,9 @@
 *.png
 *.jpeg
 
+output/*
+output/
+
 # request logs used for RE and debugging
 /request_logs/*
 

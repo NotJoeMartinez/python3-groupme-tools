@@ -9,6 +9,7 @@ completely offline.
 # from UserDict import UserDict
 from collections import UserDict 
 from inspect import cleandoc
+import datetime as dt
 import json
 import requests
 import datetime
@@ -133,52 +134,38 @@ def write_html(folder, messages, emoji=True):
         write_html_transcript(messages, f, imgcache)
         f.write(_HTML_FOOTER)
 
-def fix_json(trans_file):
-    # Read in the file
-    tf = str(trans_file)
-    with open(tf, 'r') as file:
-        filedata = file.read()
-    # Replace the target string
-    # filedata = filedata.replace(pattern, ',')
-    fixed_json = re.sub('\]\n.', '\n,\n', filedata, flags=re.MULTILINE)
 
 
-    
-    # Write the file out again
-    with open(tf, 'w') as file:
-        file.write(fixed_json)
-    pass
+def main(args):
+
+    json_file = args.jsonfile
+    output_dir = args.outputdir
+
+    if not os.path.exists(output_dir):
+        os.mkdir(output_dir)
 
 
-def main():
-    """
+    # calls fix_json
+    trans_file = open(json_file)
+
+    transcript = json.load(trans_file)
+    trans_file.close()
+
+    write_html(output_dir, transcript)
+
+
+if __name__ == '__main__':
+    help_str= """
     Usage: html-transcript.py [filename.json] [html-output-folder]
 
     Takes a JSON GroupMe transcript and writes a mostly offline HTML version of
     your transcript. 
     """
-##TODO: determine if something is missing and let the user know what's up   
 
-    # if less than 2 args
-    if len(sys.argv) < 3:
-        print(cleandoc(main.__doc__))
-        sys.exit(1)
+    import argparse
+    parser = argparse.ArgumentParser(description=help_str)
+    parser.add_argument("-jf","--jsonfile", action="store", help="json file produced from groupme-fetch.py", required=True)
+    parser.add_argument("-od","--outputdir",action="store", help="folder to output html files to", required=True)
+    args = parser.parse_args()
 
-    if not os.path.exists(sys.argv[2]):
-        os.mkdir(sys.argv[2])
-
-    json_file = sys.argv[1]
-    fix_json(json_file)
-
-    trans_file = open(sys.argv[1])
-
-    # calls fix_json
-
-    transcript = json.load(trans_file)
-    trans_file.close()
-
-    write_html(sys.argv[2], transcript)
-
-
-if __name__ == '__main__':
-    main()
+    main(args)
