@@ -98,8 +98,20 @@ def main(parser, args):
 
 
         if args.all:
-            # save_imgs(transcript, media_dir)
+            save_imgs(transcript, media_dir)
             save_avatars(transcript, media_dir)
+            save_videos(transcript, media_dir)
+
+        if args.img:
+            save_imgs(transcript, media_dir)
+
+        if args.vid:
+            save_videos(transcript, media_dir)
+
+        if args.avitars:
+            save_avatars(transcript, media_dir)
+
+        
 
 
 
@@ -138,7 +150,9 @@ if __name__ == '__main__':
     media = subparsers.add_parser('media', help="See media --help")
     media.add_argument("-jf", "--json-file", action="store", required=True, help="Path to json file")
     media.add_argument("-all", action="store_true", help="Save all media types")
-    media.add_argument("-img", action="store_true", help="Save all images types")
+    media.add_argument("-img", action="store_true", help="Save all images")
+    media.add_argument("-vid", action="store_true", help="Save all videos")
+    media.add_argument("-av", "--avatars", action="store_true", help="Save all avatars")
 
 
     args = parser.parse_args()

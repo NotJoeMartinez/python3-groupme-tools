@@ -1,9 +1,11 @@
-import requests, shutil, os
+import requests, shutil, os, re
 from pathlib import Path
 
 def downloader(url, path, ext):
 
-    filename = url.replace("https://i.groupme.com/", "")
+    filename = url.replace("https://i.groupme.com", "")
+    filename = filename.replace("https://v.groupme.com", "")
+    filename = filename.replace("/", "")
 
     res = requests.get(url, stream = True)
 
@@ -32,9 +34,19 @@ def save_avatars(transcript, media_dir):
 
 
 
+def save_videos(transcript, media_dir):
+    for elem in transcript:
+        text = elem["text"]
+        if text != None:
+            match = re.findall(
+                r'(http|https)(:\/\/[\w\-_]+(?:(?:\.[\w\-_]+)+))([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?', 
+                    text)
+            if len(match) > 0:
+                for i in match:
+                    url = ''.join(i)
+                    if url.endswith(".mp4"):
+                        downloader(url, f"{media_dir}/vids", "mp4")
 
-def save_videos():
-    pass
 
 def save_documents():
     pass
@@ -42,12 +54,11 @@ def save_documents():
 
 
 
-def make_output_dir(output_dir):
+def make_output_dir(media_dir):
 
-    if output_dir[-1] == "/":
-        output_dir = output_dir[:-1]
+    if media_dir[-1] == "/":
+        output_dir = media_dir[:-1]
 
-    media_dir = f"{output_dir}/media/"
     chat_imgs = f"{media_dir}/imgs/"
     chat_vids = f"{media_dir}/vids/"
     user_avatars = f"{media_dir}/avatars/"

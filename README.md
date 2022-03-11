@@ -30,6 +30,14 @@ HTML file with a reconstruction of the chat history. It also saved all images se
 python groupme_tools.py html -js [Path To Json File] -o [Directory To Store HTML Assets]
 ```
 
+### media 
+The media command will save specified media types found in the transcript or all of them
+when given the `-all` flag
+
+```
+python groupme_tools.py media -js [Path To Json File] [-all/-img/-av] 
+```
+
 ## Finding your access token
 
 If You have any issues with this see [GroupMe API docs](https://dev.groupme.com/docs/v3).
