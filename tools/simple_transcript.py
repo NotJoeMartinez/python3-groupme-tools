@@ -1,24 +1,11 @@
-import sys
-import importlib
+import sys, importlib, json, datetime
 from importlib import reload
+
 reload(sys)
 
-import json
-import datetime
 
 
-
-def main(args):
-
-    input_file = args.input_file
-    output_file = args.output_file
-
-    with open(input_file) as transcriptFile:
-        transcript = json.load(transcriptFile)
-
-    write_transcript(transcript, output_file)
-
-def write_transcript(messages, outputFilename):
+def write_simple_transcript(messages, outputFilename):
     """Prints a readable "transcript" from the given list of messages.
 
     Assumes the input list is sorted."""
@@ -54,21 +41,3 @@ def write_transcript(messages, outputFilename):
             outFile.write(line)
     print(f"Transcript saved to {outputFilename}")
 
-
-
-if __name__ == '__main__':
-
-    import argparse
-    help_str = """
-    Usage: simple-transcript.py transcript-filename.json output-filename.json
-
-    Assumes filename.json is a JSON GroupMe transcript in chronological order.
-
-    Times displayed in local timezone.
-    """
-    parser = argparse.ArgumentParser(description=help_str)
-    parser.add_argument("-i", "--input-file", help="Input json filename (should not be temp file)")
-    parser.add_argument("-o", "--output-file", help="output json filename Ex: [output.json]")
-    args = parser.parse_args()
-    main(args)
-    sys.exit(0)

@@ -664,3 +664,6 @@ FodyWeavers.xsd
 
 tests/
 tests/*
+
+scratch/
+scratch/*

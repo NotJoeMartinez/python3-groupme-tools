@@ -136,36 +136,3 @@ def write_html(folder, messages, emoji=True):
 
 
 
-def main(args):
-
-    json_file = args.jsonfile
-    output_dir = args.outputdir
-
-    if not os.path.exists(output_dir):
-        os.mkdir(output_dir)
-
-
-    # calls fix_json
-    trans_file = open(json_file)
-
-    transcript = json.load(trans_file)
-    trans_file.close()
-
-    write_html(output_dir, transcript)
-
-
-if __name__ == '__main__':
-    help_str= """
-    Usage: html-transcript.py [filename.json] [html-output-folder]
-
-    Takes a JSON GroupMe transcript and writes a mostly offline HTML version of
-    your transcript. 
-    """
-
-    import argparse
-    parser = argparse.ArgumentParser(description=help_str)
-    parser.add_argument("-jf","--jsonfile", action="store", help="json file produced from groupme-fetch.py", required=True)
-    parser.add_argument("-od","--outputdir",action="store", help="folder to output html files to", required=True)
-    args = parser.parse_args()
-
-    main(args)
