@@ -3,23 +3,6 @@ import json, os, re, requests, sys
 from pathlib import Path
 
 
-def make_output_dir(output_dir):
-
-    if output_dir[-1] == "/":
-        output_dir = output_dir[:-1]
-
-    # transcript_fname = transcript_fname.replace(".json", "")
-
-    parent_dir = f"{output_dir}"
-    media_dir = f"{parent_dir}/media/"
-    chat_imgs = f"{media_dir}/chat_imgs/"
-    chat_vids = f"{media_dir}/chat_vids/"
-    user_avatars = f"{media_dir}/user_avatars/"
-
-    Path(media_dir).mkdir(parents=True, exist_ok=True)
-    Path(chat_imgs).mkdir(parents=True, exist_ok=True)
-    Path(chat_vids).mkdir(parents=True, exist_ok=True)
-    Path(user_avatars).mkdir(parents=True, exist_ok=True)
 
 
 def load_transcript(transcript_fname):

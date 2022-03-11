@@ -24,7 +24,8 @@ def main(parser, args):
         transcript_fname = f'{output_dir}/transcript-{group_id}.json'
 
         # Makes directorys for output
-        make_output_dir(output_dir)
+        Path(output_dir).mkdir(parents=True, exist_ok=True)
+
 
         transcript = load_transcript(transcript_fname)
 
@@ -84,6 +85,21 @@ def main(parser, args):
         write_html(output_dir, transcript)
 
         print(f"HTML file made in {output_dir}/index.html")
+    
+    if args.command=="media":
+
+        json_path = args.json_file
+        media_dir = f"{Path(json_path).parent}/media"
+
+        make_output_dir(media_dir)
+
+        with open(json_path, "r") as j:
+            transcript = json.loads(j.read())
+
+
+        if args.all:
+            # save_imgs(transcript, media_dir)
+            save_avatars(transcript, media_dir)
 
 
 
@@ -117,6 +133,12 @@ if __name__ == '__main__':
     html = subparsers.add_parser('html', help="writes html file")
     html.add_argument("-jf","--json-file", action="store", help="Json file made from fetch")
     html.add_argument("-o","--output-dir", action="store", help="Directory to store the html file")
+
+
+    media = subparsers.add_parser('media', help="See media --help")
+    media.add_argument("-jf", "--json-file", action="store", required=True, help="Path to json file")
+    media.add_argument("-all", action="store_true", help="Save all media types")
+    media.add_argument("-img", action="store_true", help="Save all images types")
 
 
     args = parser.parse_args()
