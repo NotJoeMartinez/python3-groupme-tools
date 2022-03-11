@@ -108,8 +108,15 @@ def main(parser, args):
         if args.vid:
             save_videos(transcript, media_dir)
 
-        if args.avitars:
+        if args.avatars:
             save_avatars(transcript, media_dir)
+
+    if args.urls:
+        with open(args.urls, "r") as j:
+            transcript = json.loads(j.read())
+        show_urls(transcript)
+
+
 
         
 
@@ -154,6 +161,7 @@ if __name__ == '__main__':
     media.add_argument("-vid", action="store_true", help="Save all videos")
     media.add_argument("-av", "--avatars", action="store_true", help="Save all avatars")
 
+    parser.add_argument("--urls", action="store", help="prints urls from json file")
 
     args = parser.parse_args()
     main(parser, args)
