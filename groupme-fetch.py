@@ -1,6 +1,7 @@
 import os, sys, re, json
 from datetime import datetime
 import importlib
+from pathlib import Path
 
 from tools import avatar_fetch as af
 
@@ -16,15 +17,21 @@ def onRequestError(request):
     sys.exit(2)
 
 
-def main(args):
+def main(parser, args):
+
+    if len(sys.argv) < 2:
+        parser.print_help()
+        exit(0)
+
     group = args.group
-    accessToken = args.accessToken
+    accessToken = args.access_token
+    output_dir = args.output_dir
     beforeId = args.oldest
     stopId = args.newest
     pages = args.pages
 
     transcriptFileName = 'transcript-{0}.json'.format(group)
-    output_dict = make_output_dir(transcriptFileName)
+    output_dict = make_output_dir(output_dir,transcriptFileName)
 
     transcript = loadTranscript(transcriptFileName)
     if args.resumePrevious or args.resumeNext:
@@ -55,9 +62,14 @@ def main(args):
     # output_dict = af.save_avatars()
 
 
-def make_output_dir(transcriptFileName):
-    from pathlib import Path
-    parent_dir = f"output/{transcriptFileName[:-5]}/"
+def make_output_dir(output_dir, transcript_fname):
+
+    if output_dir[-1] == "/":
+        output_dir = output_dir[:-1]
+
+    transcript_fname = transcript_fname.replace(".json", "")
+
+    parent_dir = f"{output_dir}/{transcript_fname}/"
     media_dir = f"{parent_dir}/media/"
     chat_imgs = f"{media_dir}/chat_imgs/"
     chat_vids = f"{media_dir}/chat_vids/"
@@ -213,8 +225,9 @@ if __name__ == '__main__':
 
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('group')
-    parser.add_argument('accessToken')
+    parser.add_argument('-g','--group', action="store",help="The Group ID")
+    parser.add_argument('-t', '--access-token', action="store", help="Your acess tokenstore")
+    parser.add_argument('-o', '--output-dir', action="store", required=True, help="Output Directory")
     parser.add_argument("--resumePrevious", action='store_true', default=False, help="Resume based on the last found files and get previous messages.")
     parser.add_argument("--resumeNext", action='store_true', default=False, help="Resume based on the last found files and get next messages.")
     parser.add_argument("--oldest", help="The ID of the oldest (topmost) message in the existing transcript file")
@@ -223,5 +236,5 @@ if __name__ == '__main__':
                         help="The number of pages to pull down (defaults to as many as the conversation has")
 
     args = parser.parse_args()
-    main(args)
+    main(parser,args)
     sys.exit(0)
