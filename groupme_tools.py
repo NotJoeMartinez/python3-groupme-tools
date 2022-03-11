@@ -116,7 +116,7 @@ if __name__ == '__main__':
     # Html Transcript
     html = subparsers.add_parser('html', help="writes html file")
     html.add_argument("-jf","--json-file", action="store", help="Json file made from fetch")
-    html.add_argument("-od","--output-dir", action="store", help="Directory to store the html file")
+    html.add_argument("-o","--output-dir", action="store", help="Directory to store the html file")
 
 
     args = parser.parse_args()

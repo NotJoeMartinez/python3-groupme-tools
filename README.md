@@ -7,50 +7,43 @@ Tools to fetch the complete history of a GroupMe group chat and analyze it.
 alt="img" width="240" height="180" border="10" /></a>
 ## Example Usage
 
-**Downloads a json file with full transcript of group** 
 
-```bash
-python groupme-fetch.py [Group ID] [Your Access Token]
+### fetch 
+The fetch command when requires you provide the GroupMe group id of the chat you are 
+trying to archive and your access token. You'll also need to specify an output directory
+```
+python groupme_tools.py fetch -g [Group ID] -t [Your Access Token] -o [Output Directory]
 ```
 
-**Downloads images and makes html page of transcript** 
-You will need groupme-fetch.py to make a json file before doing this 
-
-```bash
-python html-transcript.py [filename.json] [html-output-directory]
+### simple
+The simple command takes the json file built with the fetch command and makes  
+a readable transcript file.
+```
+python groupme_tools.py simple -js [Path To Json File] -o [Path To Output File].txt
 ```
 
-## `groupme-fetch.py` 
-Allows you to grab the entire transcript for one of your groups and save it as JSON for backup and analysis. It is documented; run it with `--help` for help. It also allows you to fetch recent updates in the group to keep your JSON file up to date.
+### html 
+The HTML command takes the json file built with the fetch command and makes an 
+HTML file with a reconstruction of the chat history. It also saved all images sent in the chat 
 
-## `simple-transcript.py` 
-Processes a JSON file into a human-readable text transcript.
-
-## `stat/*`
-The files in the `stat` folder allow for learning interesting things about the transcript's content and the group's history.
+```
+python groupme_tools.py html -js [Path To Json File] -o [Directory To Store HTML Assets]
+```
 
 ## Finding your access token
 
-**nb. there are better ways to do this now; see [GroupMe API docs](https://dev.groupme.com/docs/v3).**
+If You have any issues with this see [GroupMe API docs](https://dev.groupme.com/docs/v3).
 
-Log into [GroupMe's web interface](https://web.groupme.com/groups) and use Chrome or Safari's inspector to monitor the network requests when you load one of your groups.
+1. Log into [GroupMe's web interface](https://web.groupme.com/groups) and load one of your groups.
+2. Select Settings and view the url under "Enable Group Sharing"
 
-You'll notice a GET request to an endpoint `https://v2.groupme.com/groups/GROUP_ID/messages`.
+Your group id will be between the `join_group/` and `/rAdOmLetTerRs/`  part of the url
+```
+https://groupme.com/join_group/[GROUP_ID]/rAdOmLetTerRs
+```
 
-One of the headers sent with that request, `X-Access-Token`, is your access token.
-
-## Finding your group ID
-
-**nb. there are better ways to do this now; see [GroupMe API docs](https://dev.groupme.com/docs/v3).**
-
-Again, in GroupMe's web interface, the group ID is the numeric ID included in the group's URL (`https://web.groupme.com/groups/GROUP_ID`).
-
-## Requirements/Dependencies/Python
+## Requirements 
 - Wget
 - Requests
 `pip install -r requirments.txt`
 
-## Keep your transcript up to date
-After your initial fetch with `groupme-fetch.py`, optionally using the `oldest` option to fetch older history. You should have a complete transcript up to the last time you fetched. Then...
-Note the `oldest` or `newest` parameters are message IDs from your transcript JSON file.
-`python groupme-fetch.py GROUPID ACCESSTOKEN newest $(python newest-id.py transcript-GROUPID.json)`
