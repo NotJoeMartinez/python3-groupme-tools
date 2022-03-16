@@ -44,11 +44,11 @@ If You have any issues with this see [GroupMe API docs](https://dev.groupme.com/
 
 1. Log into [GroupMe's web interface](https://web.groupme.com/groups) and load one of your groups.
 2. Select Settings and view the url under "Enable Group Sharing"
-
-Your group id will be between the `join_group/` and `/rAdOmLetTerRs/`  part of the url
+3. From this you will see a link appear, your group id will be between the `join_group/` and `/rAdOmLetTerRs/`  part of the url
 ```
 https://groupme.com/join_group/[GROUP_ID]/rAdOmLetTerRs
 ```
+![group_id2](docs/group_id2.png)
 
 ## Requirements 
 - Wget
