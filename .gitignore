@@ -1,6 +1,5 @@
 #imgs
 *.jpg
-*.png
 *.jpeg
 
 output/*
